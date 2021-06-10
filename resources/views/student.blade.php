@@ -2,33 +2,24 @@
 @section('title','student management')
 @section('content')
     <div style="margin-top: 20px;display: inline-block;position: relative">
+
         <form class="layui-form" action="">
             <div class="layui-form-item">
                 <label class="layui-form-label">姓名</label>
                 <div class="layui-input-block">
-                    <input type="text" name="title" placeholder="请输姓名" autocomplete="off" class="layui-input">
+                    <input type="text" name="name" value="" placeholder="请输姓名" autocomplete="off" class="layui-input">
                 </div>
             </div>
 
             <div class="layui-form-item">
                 <label class="layui-form-label">选择框</label>
                 <div class="layui-input-block">
-                    <select name="city" lay-verify="required">
+                    <select name="class">
                         <option value=""></option>
-                        <option value="0">一年级</option>
-                        <option value="1">二年级</option>
-                        <option value="2">三年级</option>
-                        <option value="3">四年级</option>
-                        <option value="4">五年级</option>
+                    @foreach($classes as $class)
+                        <option value="{{$class->id}}">{{$class->class}}</option>
+                        @endforeach
                     </select>
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label">单选框</label>
-                <div class="layui-input-block">
-                    <input type="radio" name="sex" value="男" title="男">
-                    <input type="radio" name="sex" value="女" title="女" checked>
                 </div>
             </div>
 
@@ -41,12 +32,15 @@
     </div>
 
 <div style="position: absolute;left: 400px;top: 10px">
+
+
+    <a href="{{url('student/add')}}"><button type="button" class="layui-btn"> 新增学生</button></a>
     <table class="layui-table">
         <colgroup>
             <col width="150">
             <col width="150">
             <col width="150">
-            <col width="150">
+            <col width="100">
             <col width="200">
         </colgroup>
         <thead>
@@ -59,29 +53,27 @@
         </tr>
         </thead>
         <tbody>
-        <tr>
-            @foreach($students as $student)
+        @foreach($students as $student)
+            <tr>
             <td>{{$student->id}}</td>
-            <td>{{$student->grade->grade . $student->classes->class}}</td>
+            <td>{{$student->classes->class}}</td>
             <td>{{$student->name}}</td>
             <td>{{$student->sex}}</td>
             <td>
-                <a href="">
-                    <i class="layui-icon layui-icon-set" style=" color: #1E9FFF;"></i>
-                </a>
-                <a href="">
-                    <i class="layui-icon layui-icon-delete" style=" color: #FF5722;"></i>
-                </a>
-
+                <a class="layui-btn layui-btn-xs  " data-ptype="2"
+                   lay-event="edit" data-id="{{$student->id}}" href="{{url('student/add?id=').$student->id}}">编辑</a>
+                <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete delete" data-ptype="1"
+                   lay-event="delete" data-id="{{$student->id}}">删除</a>
             </td>
-            @endforeach
         </tr>
+        @endforeach
         </tbody>
     </table>
 </div>
-
-
-    @endsection()
+@endsection()
+<script src="{{URL::asset('layui/layui.js')}}"></script>
+<script src="layui/jQuery.js"></script>
+<script src="layui/common.js"></script>
 <script>
     //Demo
     layui.use('form', function(){
@@ -92,5 +84,21 @@
             layer.msg(JSON.stringify(data.field));
             return false;
         });
+        $('.delete').on('click', function () {
+            let id = $(this).attr('data-id');
+            layObj.box(`是否删除当前学生`, () => {
+                let   url = "{{url('student/delete')}}?id="+id;
+                layObj.get(url,  (res) =>{
+                    if(res.code === 200) {
+                        window.location.reload();
+                    } else {
+                        layer.msg("删除失败");
+                    }
+                })
+
+            })
+        })
+
+
     });
 </script>

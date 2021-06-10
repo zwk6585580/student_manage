@@ -3,11 +3,13 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="layui/css/layui.css">
+    <link rel="stylesheet" href="{{URL::asset('layui/css/layui.css')}}">
     <title>@yield('title')</title>
 </head>
 <body class="antialiased">
-<script src="layui/layui.js"></script>
+<script src="{{URL::asset('layui/layui.js')}}"></script>
+<script src="{{URL::asset('layui/jQuery.js')}}"></script>
+<script src="{{URL::asset('layui/common.js')}}"></script>
 <div>
     <ul class="layui-nav" lay-filter="">
         <li class="layui-nav-item"><a href="">班级管理</a></li>
